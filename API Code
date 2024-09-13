@@ -1,0 +1,36 @@
+// Demandbase API Call
+	var db_uid = "UID"
+// Fetch data from Demandbase
+DBscript=document.createElement('script');
+DBscript.setAttribute("type","text/javascript");
+DBscript.setAttribute("src", "//scripts.demandbase.com/adobeanalytics/db_uid.min.js");
+DBscript.setAttribute("async", true);
+DBscript.setAttribute("defer", true);
+document.getElementsByTagName("head")[0].appendChild(DBscript);
+           
+var xmlhttp;
+            
+if (window.XMLHttpRequest) { // IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.withCredentials = true;
+} else { //IE6, IE5
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+}
+            
+xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//xmlhttp.responseText will contain the text of our JSON response with company data.
+        sessionStorage.setItem('db_sid_ID',JSON.parse(xmlhttp.responseText).demandbase_sid);
+        sessionStorage.setItem('db_company',JSON.parse(xmlhttp.responseText).company_name + 
+        '|' + JSON.parse(xmlhttp.responseText).industry + '|' + JSON.parse(xmlhttp.responseText).sub_industry +
+        '|' + JSON.parse(xmlhttp.responseText).employee_range + '|' + JSON.parse(xmlhttp.responseText).revenue_range);
+        sessionStorage.setItem('db_audience',JSON.parse(xmlhttp.responseText).audience + 
+        '|' + JSON.parse(xmlhttp.responseText).audience_segment + 
+        '|' + JSON.parse(xmlhttp.responseText).marketing_alias + '|' + JSON.parse(xmlhttp.responseText).web_site);
+    
+    }
+}
+var db_api_key = "YOUR_DEMANDBASE_API_KEY";
+var url = "https://api.company-target.com/api/v2/ip.json?auth=db_api_key";
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
