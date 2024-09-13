@@ -1,0 +1,43 @@
+// check if db_sid_ID is not in session storage yet AND the interval counter is undefined
+if(window.sessionStorage.getItem('db_sid_ID')== null && typeof db_interval_counter === "undefined") {
+    
+    // copy b object (data layer)
+    window.data_layer_copy = b;
+    
+    // create a variable to keep track of the loops
+    window.db_interval_counter = 0;
+    
+    // start interval to look for db_sid_ID in session storage
+    var db_interval = setInterval(function(){
+        
+        // check if the session storage value is set or if we have looped 50 times
+        if( window.sessionStorage.getItem('db_sid_ID') !== null || db_interval_counter == 10 ) {
+            
+            // cancel the interval
+            clearInterval(db_interval)
+            
+    // retrigger adobe tag by including UID in the 3rd argument (this will ignore load rules)
+    // Dynamical update the 3rd argument with the UID corresponding to profile
+            if(b['ut.profile'] == 'USA'){
+                // Adobe Analytics - Base Code [New] UID-101
+                utag.view(data_layer_copy, null, [101])    
+            } else if(b['ut.profile'] == 'CAN'){ 
+                // Adobe Analytics - Base Code [New] UID-201
+                utag.view(data_layer_copy, null, [201])
+            } else if(b['ut.profile'] == 'UK'){ 
+                // Adobe Analytics - Base Code [New] UID-301
+                utag.view(data_layer_copy, null, [301])
+            } else { 
+                // Adobe Analytics - Base Code [New] UID-1
+                utag.view(data_layer_copy, null, [1])
+            }
+            
+           
+        }
+        // increment counter by 1 each loop
+        db_interval_counter++
+    }, 250)
+    
+    // kill the adobe tag
+    return false;
+}
